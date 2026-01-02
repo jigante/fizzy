@@ -1,6 +1,8 @@
 # Name of this app
 service: fizzy
-image: fizzy
+
+# Name of the container image.
+image: jigante/fizzy
 
 #-- About your deployment --#
 
@@ -29,19 +31,29 @@ env:
     - VAPID_PRIVATE_KEY
     - SMTP_USERNAME
     - SMTP_PASSWORD
+    - S3_ACCESS_KEY_ID
+    - S3_SECRET_ACCESS_KEY
+    - S3_ENDPOINT
   clear:
     BASE_URL: https://fizzy.agileweb.it # The public URL of your Fizzy instance
     MAILER_FROM_ADDRESS: admin@agileweb.it # The email "from" address that Fizzy sends email from
     SMTP_ADDRESS: smtp.postmarkapp.com # The SMTP server you'll use to send email
     MULTI_TENANT: false # Set to true to allow multiple accounts to sign up
     SOLID_QUEUE_IN_PUMA: true # Run background jobs in the app container
-
+    ACTIVE_STORAGE_SERVICE: s3 # Use S3-compatible storage (R2)
+    S3_BUCKET: fizzy-production-activestorage # Your R2 bucket name
+    S3_REGION: auto # R2 uses "auto" for region
+    S3_FORCE_PATH_STYLE: true # Required for R2 compatibility
 
 #-- General configuration --#
 
-# Use a local registry to deploy
 registry:
-  server: localhost:5555
+  # Specify the registry server, if you're not using Docker Hub
+  # server: registry.digitalocean.com / ghcr.io / ...
+  server: ghcr.io
+  username: jigante
+  password:
+    - KAMAL_REGISTRY_PASSWORD
 
 # Handy aliases for interacting with your deployment. For eaxmple: `bin/kamal console` will connect to a
 # Rails console in production.
