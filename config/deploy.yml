@@ -2,22 +2,24 @@
 service: fizzy
 image: fizzy
 
-
 #-- About your deployment --#
 
 # Where to deploy fizzy
 servers:
   web:
-    - fizzy.example.com  # Set your server name here
+    hosts:
+      - 100.87.52.127 # Tailscale IP address for livt.agileweb.it
 
 # How you connect to your server
 ssh:
-  user: root  # If you use a different username to SSH to your server, specify it here
+  user: app
+  port: 7822
 
 # Automatic SSL
 proxy:
-  ssl: true                # Set this to false if you *don't* want SSL
-  host: fizzy.example.com  # Set your server name here to use automatic SSL
+  ssl: true
+  host: fizzy.agileweb.it
+  forward_headers: true # Trust X-Forwarded-For, CF-Connecting-IP from Cloudflare
 
 # Your application configuration (secrets come from .kamal/secrets).
 env:
@@ -28,9 +30,9 @@ env:
     - SMTP_USERNAME
     - SMTP_PASSWORD
   clear:
-    BASE_URL: https://fizzy.example.com # The public URL of your Fizzy instance
-    MAILER_FROM_ADDRESS: support@example.com # The email "from" address that Fizzy sends email from
-    SMTP_ADDRESS: mail.example.com # The SMTP server you'll use to send email
+    BASE_URL: https://fizzy.agileweb.it # The public URL of your Fizzy instance
+    MAILER_FROM_ADDRESS: admin@agileweb.it # The email "from" address that Fizzy sends email from
+    SMTP_ADDRESS: smtp.postmarkapp.com # The SMTP server you'll use to send email
     MULTI_TENANT: false # Set to true to allow multiple accounts to sign up
     SOLID_QUEUE_IN_PUMA: true # Run background jobs in the app container
 
@@ -52,12 +54,12 @@ aliases:
 # Use a persistent storage volume for sqlite database files and local Active Storage files.
 # Recommended to change this to a mounted volume path that is backed up off server.
 volumes:
-  - "fizzy_storage:/rails/storage"
+  - "/home/app/docker/fizzy_storage:/rails/storage"
 
 # Bridge fingerprinted assets, like JS and CSS, between versions to avoid
 # hitting 404 on in-flight requests. Combines all files from new and old
 # version inside the asset_path.
-asset_path: /rails/public/assets
+asset_path: /home/app/docker/fizzy_public_assets
 
 # Configure the image builder.
 builder:
