@@ -44,6 +44,8 @@ env:
     S3_BUCKET: fizzy-prod-activestorage # Your R2 bucket name
     S3_REGION: auto # R2 uses "auto" for region
     S3_FORCE_PATH_STYLE: true # Required for R2 compatibility
+    S3_REQUEST_CHECKSUM_CALCULATION: when_required # Required for R2 compatibility
+    S3_RESPONSE_CHECKSUM_VALIDATION: when_required # Required for R2 compatibility
 
 #-- General configuration --#
 
