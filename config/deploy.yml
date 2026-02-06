@@ -15,7 +15,8 @@ servers:
 # How you connect to your server
 ssh:
   user: app
-  port: 7822
+  # If connecting via Tailscale ssh, port is the default one 22
+  # port: 7822
 
 # Automatic SSL
 proxy:
